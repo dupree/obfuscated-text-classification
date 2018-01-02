@@ -1,8 +1,8 @@
 # README #
 
-### What is this repository for? ###
+### Sentence Classification ###
 
-This project aims at classifying different sentences to the specific book/novel they belong to.
+This project aims at classifying sentences to the specific book/novel they belong to.
 
 1 The task is to classify sentences to a specific category, essentially a text classification task. 
 
@@ -94,30 +94,18 @@ And a sapmle input sentence xtrain[0] gets mapped to(after padding) -
 
 14 We train a simple LSTM with glove embeddings and two dense layers, reaching to a validation accuracy of around 62% in 260 epochs with batch size 512.
 
-15 We train another bidirectional LSTM with glove embeddings and two dense layers, but this network takes a long time to train. Around 300 seconds per epoch. Could NOT generate feasible results in given time.
+15 We train another bidirectional LSTM with glove embeddings and two dense layers, but this network takes a long time to train. Around 300 seconds per epoch. After training for 160 epochs this network reaches accuracy of 75.33%. This is the best performing model seen as far.
 
-16 We train GRU(Gated recurrent Units) with glove embeddings and two dense layers, again this network takes a long time to train. Around 300 seconds per epoch. Could NOT generate feasible results in given time.
+16 We train GRU(Gated recurrent Units) with glove embeddings and two dense layers, again this network takes a long time to train. Around 300 seconds per epoch. Maximum accuracy reached via this network is 30%
 
 17 Finally we utilize Training a 1D convnet with existing GloVe features/vectors, as the training times are much better with convolution networks. Inspired by - Implementing a CNN for Text Classification in TensorFlow http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/
 
 18 This network is a Sequential network consisting of an embedding layer based on the embedding_matrix computed earlier, followed by a dropout, a Conv1Dimension layer with 128 filters and 5 as kernel size, followed with Max pooling. We stack 3 of these layers followed with a Relu and finally a softmax with 12 as outputs.
+CNN reaches the accuracy of 64%
 
 ### How do I get set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* Working installation of tensorflow, keras version 1.3.X 
+* Other dependencies such as nltk, sklearn, pandas
+* Jupyter notebook
+* Python 2.7
