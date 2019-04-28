@@ -4,17 +4,17 @@
 
 This project aims at classifying sentences to the specific book/novel they belong to.
 
-1 The task is to classify sentences to a specific category, essentially a text classification task. 
+1. The task is to classify sentences to a specific category, essentially a text classification task. 
 
-2 Input/training data is obfuscated and contains continuous sequence of characters for each sentence, usual NLP pipeline - tokenisation, lemmatization, stemming and stop word removal is not applicable here.(Not directly)
+2. **Input/training data is obfuscated and contains continuous sequence of characters for each sentence, usual NLP pipeline - tokenisation, lemmatization, stemming and stop word removal is not applicable here.(Not directly)
 
 2.1 Data is divided into training and validation sets in 80%-20% ratio. 
 
-3 Before using "deep" neural networks it's always a good practise to check the performance of classical models such as Multinomial Naive Bayes(MNB), Simple Logistic Regression(SLR) and Support Vector Machines(SVM) on the given data.
+3. Before using "deep" neural networks it's always a good practise to check the performance of classical models such as Multinomial Naive Bayes(MNB), Simple Logistic Regression(SLR) and Support Vector Machines(SVM) on the given data.
 
-4 In order to move ahead with classical models, data first needs to be processed and mapped into features. For this methods employed are - Tf-IdfVectorizer(Term Frequency-InverseDocument Frequency) and CountVectorizer available from sklearn.feature_extraction.text. Here characters are considered as individual terms/tokens and the counts and frequency is calculated on character level.
+4. In order to move ahead with classical models, data first needs to be processed and mapped into features. For this methods employed are - Tf-IdfVectorizer(Term Frequency-InverseDocument Frequency) and CountVectorizer available from sklearn.feature_extraction.text. Here characters are considered as individual terms/tokens and the counts and frequency is calculated on character level.
 
-5 Once these features are extracted, they are used to train below models with following log_loss values - 
+5. Once these features are extracted, they are used to train below models with following log_loss values - 
 
 5.1 Fitting a simple Logistic Regression on TFIDF:
 logloss: 0.999 
@@ -32,11 +32,11 @@ logloss: 1.473
 logloss: 5.039 
 0.64% is the accuracy percentage
 
-6 Now Singular value decomposition(with 120 components) is used before fitting the data to a SVM. Data is scaled after SVD and then fed to fit on a SVM.
+6. Now Singular value decomposition(with 120 components) is used before fitting the data to a SVM. Data is scaled after SVD and then fed to fit on a SVM.
 logloss: 1.087 
 33.71% is the accuracy percentage 
 
-7 Next Xtreme Gradient Boosting(xgboost) is utilized with above extracted features and models.
+7. Next Xtreme Gradient Boosting(xgboost) is utilized with above extracted features and models.
 
 7.1 Fitting a simple xgboost on TFIDF:
 logloss: 0.772 
@@ -50,24 +50,24 @@ logloss: 1.245
 logloss: 0.740 
 47.71% is the accuracy percentage
 
-8 Next, Grid Search methodology is used to search through optimal parameters for training the above mentioned models. GridSearchCV module from sklearn.model_selection is used.
+8. Next, Grid Search methodology is used to search through optimal parameters for training the above mentioned models. GridSearchCV module from sklearn.model_selection is used.
 
-9 Once these models are done, its obsereved that classification accuracy is not ideal and reaches to a maximum at 47.71% in 7.3(xgboost on CountVectorizer) and 47.30% in 5.2(SLR on CountVectorizer).
+9. Once these models are done, its obsereved that classification accuracy is not ideal and reaches to a maximum at 47.71% in 7.3(xgboost on CountVectorizer) and 47.30% in 5.2(SLR on CountVectorizer).
 
-10 Now we move towards multi layered pereceptrons(MLPs) for classification task. To begin with data is processed and mapped onto a vector space utilizing GloVe(Global Vectors for word representation - https://nlp.stanford.edu/projects/glove/) features. Here again we work on character level instead of word levels.
+10. Now we move towards multi layered pereceptrons(MLPs) for classification task. To begin with data is processed and mapped onto a vector space utilizing GloVe(Global Vectors for word representation - https://nlp.stanford.edu/projects/glove/) features. Here again we work on character level instead of word levels.
 
-Stack used - Python27, TensorFlow, Keras
+**Stack used - Python27, TensorFlow, Keras
 
-11 We load the glove vectors into the dictionary(embeddings index) and then map the training sentences to vectors utilizing sent2vec function module. This leads to creation of xtrain_glove and xvalid_glove vector representations of data. This data is further scaled before being fed to a neural network. The training labels(ytrain.txt data) are binarized for feeding to a neural network. After this a sample data looks like(also shown in the jupyter notebook shared) -(also shown in the jupyter notebook shared)
+11. We load the glove vectors into the dictionary(embeddings index) and then map the training sentences to vectors utilizing sent2vec function module. This leads to creation of xtrain_glove and xvalid_glove vector representations of data. This data is further scaled before being fed to a neural network. The training labels(ytrain.txt data) are binarized for feeding to a neural network. After this a sample data looks like(also shown in the jupyter notebook shared):
 xtrain_glove[0]
 [-0.0327601   0.07798596 -0.08264437 ..., -0.00731602  0.01921969
    0.04853879]
 ytrain[0]
 [0 0 0 0 0 0 1 0 0 0 0 0]
 
-12 Next, this data is fed to a simple sequential neural network utilizing Relu, dropout, batchNormalization stacked twice followed by a softmax with 12 outputs. This network utilizes loss='categorical_crossentropy' and optimizer='adam'. This network starts training quickly and it is observed that in around 16 epochs with a batch size of 64, the model reaches its validataion_loss value to 1.72. On continue to train we can see the loss keeps on decreasing while validataion_loss fluctuates and starts increasing again, showing that the model is starting to "OverFit".
+12. Next, this data is fed to a simple sequential neural network utilizing Relu, dropout, batchNormalization stacked twice followed by a softmax with 12 outputs. This network utilizes loss='categorical_crossentropy' and optimizer='adam'. This network starts training quickly and it is observed that in around 16 epochs with a batch size of 64, the model reaches its validataion_loss value to 1.72. On continue to train we can see the loss keeps on decreasing while validataion_loss fluctuates and starts increasing again, showing that the model is starting to "OverFit".
 
-13 Since the data we have is a sequence of characters, there has to be a contextual relation in occurences of different charaacters. This motivates for the application of LSTM(Long Short Term Memory Networks). Model is contructed in keras.
+13. Since the data we have is a sequence of characters, there has to be a contextual relation in occurences of different charaacters. This motivates for the application of LSTM(Long Short Term Memory Networks). Model is contructed in keras.
 
 We use Keras Tokenizer(text.Tokenizer(num_words=None, char_level=True)) on character level for processing input sentences, and create a vocabulary of 26 characters. Vocabulary(word_index) created looks like - 
 {'a': 11, 'c': 23, 'b': 26, 'e': 5, 'd': 19, 'g': 17, 'f': 20, 'i': 9, 'h': 2, 'k': 12, 'j': 25, 'm': 3, 'l': 6, 'o': 24, 'n': 14, 'q': 13, 'p': 10, 's': 15, 'r': 16, 'u': 1, 't': 8, 'w': 7, 'v': 4, 'y': 21, 'x': 22, 'z': 18}
@@ -92,15 +92,15 @@ And a sapmle input sentence xtrain[0] gets mapped to(after padding) -
  11  3 21 10 12 16 13  4  1  2 11  3  1  6  3  4 19 20  1  2 13  4 15 12  5
  14  8  7 11  3  6  5  8  7  6 16  6 16 10  3  9  7  1  2  8  7 11  3  1  6]
 
-14 We train a simple LSTM with glove embeddings and two dense layers, reaching to a validation accuracy of around 62% in 260 epochs with batch size 512.
+14. We train a simple LSTM with glove embeddings and two dense layers, reaching to a validation accuracy of around 62% in 260 epochs with batch size 512.
 
-15 We train another bidirectional LSTM with glove embeddings and two dense layers, but this network takes a long time to train. Around 300 seconds per epoch. After training for 160 epochs this network reaches accuracy of 75.33%. This is the best performing model seen as far.
+15. We train another bidirectional LSTM with glove embeddings and two dense layers, but this network takes a long time to train. Around 300 seconds per epoch. After training for 160 epochs this network reaches accuracy of 75.33%. This is the best performing model seen as far.
 
-16 We train GRU(Gated recurrent Units) with glove embeddings and two dense layers, again this network takes a long time to train. Around 300 seconds per epoch. Maximum accuracy reached via this network is 30%
+16. We train GRU(Gated recurrent Units) with glove embeddings and two dense layers, again this network takes a long time to train. Around 300 seconds per epoch. Maximum accuracy reached via this network is 30%
 
-17 Finally we utilize Training a 1D convnet with existing GloVe features/vectors, as the training times are much better with convolution networks. Inspired by - Implementing a CNN for Text Classification in TensorFlow http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/
+17. Finally we utilize Training a 1D convnet with existing GloVe features/vectors, as the training times are much better with convolution networks. Inspired by - Implementing a CNN for Text Classification in TensorFlow http://www.wildml.com/2015/12/implementing-a-cnn-for-text-classification-in-tensorflow/
 
-18 This network is a Sequential network consisting of an embedding layer based on the embedding_matrix computed earlier, followed by a dropout, a Conv1Dimension layer with 128 filters and 5 as kernel size, followed with Max pooling. We stack 3 of these layers followed with a Relu and finally a softmax with 12 as outputs.
+18. This network is a Sequential network consisting of an embedding layer based on the embedding_matrix computed earlier, followed by a dropout, a Conv1Dimension layer with 128 filters and 5 as kernel size, followed with Max pooling. We stack 3 of these layers followed with a Relu and finally a softmax with 12 as outputs.
 CNN reaches the accuracy of 64%
 
 ### How do I get set up? ###
