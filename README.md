@@ -6,7 +6,7 @@ This project aims at classifying sentences to the specific book/novel they belon
 
 1. The task is to classify sentences to a specific category, essentially a text classification task. 
 
-2. **Input/training data is obfuscated and contains continuous sequence of characters for each sentence, usual NLP pipeline - tokenisation, lemmatization, stemming and stop word removal is not applicable here.(Not directly)
+2. **Input/training data is obfuscated and contains continuous sequence of characters for each sentence, usual NLP pipeline - tokenisation, lemmatization, stemming and stop word removal is not applicable here.(Not directly)**
 
 2.1 Data is divided into training and validation sets in 80%-20% ratio. 
 
@@ -56,7 +56,7 @@ logloss: 0.740
 
 10. Now we move towards multi layered pereceptrons(MLPs) for classification task. To begin with data is processed and mapped onto a vector space utilizing GloVe(Global Vectors for word representation - https://nlp.stanford.edu/projects/glove/) features. Here again we work on character level instead of word levels.
 
-**Stack used - Python27, TensorFlow, Keras
+**Stack used - Python27, TensorFlow, Keras**
 
 11. We load the glove vectors into the dictionary(embeddings index) and then map the training sentences to vectors utilizing sent2vec function module. This leads to creation of xtrain_glove and xvalid_glove vector representations of data. This data is further scaled before being fed to a neural network. The training labels(ytrain.txt data) are binarized for feeding to a neural network. After this a sample data looks like(also shown in the jupyter notebook shared):
 xtrain_glove[0]
